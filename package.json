@@ -4,6 +4,10 @@
   "description": "",
   "keywords": [],
   "main": "src/index.js",
+  "resolutions": {
+    "**/react": "16.12.0",
+    "**/react-dom": "16.12.0"
+  },
   "dependencies": {
     "@filbert-js/core": "0.0.7",
     "react": "16.12.0",
