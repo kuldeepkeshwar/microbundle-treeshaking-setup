@@ -1,2 +1,2 @@
-# filbertjs-treeshaking-setup
+# microbundle-treeshaking-setup
 Created with CodeSandbox
