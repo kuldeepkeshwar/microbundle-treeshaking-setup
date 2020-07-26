@@ -32,7 +32,6 @@ verifyTypeScriptSetup();
 
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
-const captureSizes = require("./capture-sizes");
 
 const path = require("path");
 const chalk = require("react-dev-utils/chalk");
@@ -118,8 +117,6 @@ checkBrowsers(paths.appPath, isInteractive)
         WARN_AFTER_BUNDLE_GZIP_SIZE,
         WARN_AFTER_CHUNK_GZIP_SIZE
       );
-      console.log();
-      captureSizes(stats, paths.appBuild);
 
       const appPackage = require(paths.appPackageJson);
       const publicUrl = paths.publicUrlOrPath;
