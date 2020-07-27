@@ -1,11 +1,17 @@
 import React from "react";
-import { Stack } from "layout-ui";
+import { Columns, Stack } from "layout-ui";
 
 export default function App() {
   return (
+    <>
       <Stack gap="2rem" align="center">
-        <h1>Hello CodeSandbox</h1>
-        <h2>Start editing to see some magic happen!</h2>
+        <div>Item 1</div>
+        <div>Item 2</div>
       </Stack>
+      <Columns gap="2rem" align="center">
+        <Columns.Column>Item 1</Columns.Column>
+        <Columns.Column>Item 2</Columns.Column>
+      </Columns>
+    </>
   );
 }
