@@ -14,7 +14,7 @@ process.env.NODE_ENV = "production";
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
-process.on("unhandledRejection", err => {
+process.on("unhandledRejection", (err) => {
   throw err;
 });
 
@@ -67,9 +67,53 @@ const config = configFactory("production");
 config.plugins.push(
   new BundleAnalyzerPlugin({
     analyzerMode: "static",
-    reportFilename: "report.html"
+    reportFilename: "bundle-report.html",
   })
 );
+config.optimization = {
+  splitChunks: {
+    cacheGroups: {
+      filbert: {
+        test: function (module) {
+          return (
+            module.resource &&
+            module.resource.includes("node_modules") &&
+            module.resource.includes("filbert-js")
+          );
+        },
+        name: "filbert-js",
+        enforce: true,
+        chunks: "all",
+      },
+      layout: {
+        test: function (module) {
+          return (
+            module.resource &&
+            module.resource.includes("node_modules") &&
+            module.resource.includes("layout-ui")
+          );
+        },
+        name: "layout-ui",
+        enforce: true,
+        chunks: "all",
+      },
+      vendor: {
+        test: function (module) {
+          return (
+            module.resource &&
+            module.resource.includes("node_modules") &&
+            !(
+              module.resource.includes("filbert-js") ||
+              module.resource.includes("layout-ui")
+            )
+          );
+        },
+        name: "vendors",
+        chunks: "all",
+      },
+    },
+  },
+};
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
@@ -80,7 +124,7 @@ checkBrowsers(paths.appPath, isInteractive)
     // This lets us display how much they changed later.
     return measureFileSizesBeforeBuild(paths.appBuild);
   })
-  .then(previousFileSizes => {
+  .then((previousFileSizes) => {
     // Remove all content but keep the directory so that
     // if you're in it, you don't end up in Trash
     fs.emptyDirSync(paths.appBuild);
@@ -130,7 +174,7 @@ checkBrowsers(paths.appPath, isInteractive)
         useYarn
       );
     },
-    err => {
+    (err) => {
       const tscCompileOnError = process.env.TSC_COMPILE_ON_ERROR === "true";
       if (tscCompileOnError) {
         console.log(
@@ -146,7 +190,7 @@ checkBrowsers(paths.appPath, isInteractive)
       }
     }
   )
-  .catch(err => {
+  .catch((err) => {
     if (err && err.message) {
       console.log(err.message);
     }
@@ -189,7 +233,7 @@ function build(previousFileSizes) {
 
         messages = formatWebpackMessages({
           errors: [errMessage],
-          warnings: []
+          warnings: [],
         });
       } else {
         messages = formatWebpackMessages(
@@ -222,7 +266,7 @@ function build(previousFileSizes) {
       return resolve({
         stats,
         previousFileSizes,
-        warnings: messages.warnings
+        warnings: messages.warnings,
       });
     });
   });
@@ -231,6 +275,6 @@ function build(previousFileSizes) {
 function copyPublicFolder() {
   fs.copySync(paths.appPublic, paths.appBuild, {
     dereference: true,
-    filter: file => file !== paths.appHtml
+    filter: (file) => file !== paths.appHtml,
   });
 }
